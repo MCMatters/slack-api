@@ -54,7 +54,7 @@ class Message
     /**
      * @var Attachment[]
      */
-    protected $attachments;
+    protected $attachments = [];
 
     /**
      * Message constructor.
