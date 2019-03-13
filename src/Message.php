@@ -6,8 +6,8 @@ namespace McMatters\SlackApi;
 
 use InvalidArgumentException;
 use RuntimeException;
-use const null, true;
 use const CURLOPT_HTTPHEADER, CURLOPT_POST, CURLOPT_POSTFIELDS, CURLOPT_RETURNTRANSFER, CURLOPT_URL;
+use const null, true;
 use function array_filter, curl_close, curl_errno, curl_error, curl_init,
     curl_setopt, implode, in_array, json_encode;
 
@@ -52,9 +52,14 @@ class Message
     protected $iconType = self::ICON_TYPE_EMOJI;
 
     /**
-     * @var Attachment[]
+     * @var \McMatters\SlackApi\Attachment[]
      */
     protected $attachments = [];
+
+    /**
+     * @var array
+     */
+    protected $custom = [];
 
     /**
      * Message constructor.
@@ -133,7 +138,7 @@ class Message
     }
 
     /**
-     * @param Attachment $attachment
+     * @param \McMatters\SlackApi\Attachment $attachment
      *
      * @return \McMatters\SlackApi\Message
      */
@@ -145,7 +150,7 @@ class Message
     }
 
     /**
-     * @param array $attachments
+     * @param \McMatters\SlackApi\Attachment[] $attachments
      *
      * @return \McMatters\SlackApi\Message
      */
@@ -158,18 +163,33 @@ class Message
         return $this;
     }
 
+
     /**
+     * @param array $data
+     *
+     * @return \McMatters\SlackApi\Message
+     */
+    public function setCustom(array $data): self
+    {
+        $this->custom = $data;
+
+        return $this;
+    }
+
+    /**
+     * @param array $headers
+     *
      * @return mixed
      * @throws \RuntimeException
      */
-    public function send()
+    public function send(array $headers = [])
     {
         $curl = curl_init();
 
         curl_setopt($curl, CURLOPT_URL, $this->endpoint);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curl, CURLOPT_POST, true);
-        curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type' => 'application/json']);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $headers + ['Content-Type' => 'application/json']);
         curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($this->preparePayload()));
 
         $response = curl_exec($curl);
@@ -194,12 +214,12 @@ class Message
         $this->checkRequiredVariables();
 
         return array_filter([
-            'text'          => $this->text,
-            'channel'       => $this->to,
-            'username'      => $this->from,
+            'text' => $this->text,
+            'channel' => $this->to,
+            'username' => $this->from,
             $this->iconType => $this->icon,
-            'attachments'   => $this->getAttachments(),
-        ]);
+            'attachments' => $this->getAttachments(),
+        ] + $this->custom);
     }
 
     /**

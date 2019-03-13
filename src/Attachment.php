@@ -86,10 +86,20 @@ class Attachment implements Arrayable
     protected $ts;
 
     /**
-     * @var AttachmentField[]
+     * @var \McMatters\SlackApi\AttachmentField[]
      */
     protected $fields = [];
 
+    /**
+     * @var array
+     */
+    protected $custom = [];
+
+    /**
+     * Attachment constructor.
+     *
+     * @param array $attributes
+     */
     public function __construct(array $attributes = [])
     {
         $this->setAttributes($attributes);
@@ -274,7 +284,7 @@ class Attachment implements Arrayable
     }
 
     /**
-     * @param AttachmentField[] $fields
+     * @param \McMatters\SlackApi\AttachmentField[] $fields
      *
      * @return \McMatters\SlackApi\Attachment
      * @throws \InvalidArgumentException
@@ -295,13 +305,25 @@ class Attachment implements Arrayable
     }
 
     /**
-     * @param AttachmentField $field
+     * @param \McMatters\SlackApi\AttachmentField $field
      *
-     * @return Attachment
+     * @return \McMatters\SlackApi\Attachment
      */
     public function addField(AttachmentField $field): self
     {
         $this->fields[] = $field;
+
+        return $this;
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return \McMatters\SlackApi\Attachment
+     */
+    public function setCustom(array $data): self
+    {
+        $this->custom = $data;
 
         return $this;
     }
@@ -312,22 +334,22 @@ class Attachment implements Arrayable
     public function toArray(): array
     {
         return array_filter([
-            'fallback'    => $this->fallback,
-            'color'       => $this->color,
-            'text'        => $this->text,
-            'title'       => $this->title,
-            'title_link'  => $this->titleLink,
-            'pretext'     => $this->pretext,
+            'fallback' => $this->fallback,
+            'color' => $this->color,
+            'text' => $this->text,
+            'title' => $this->title,
+            'title_link' => $this->titleLink,
+            'pretext' => $this->pretext,
             'author_name' => $this->authorName,
             'author_link' => $this->authorLink,
             'author_icon' => $this->authorIcon,
-            'image_url'   => $this->imageUrl,
-            'thumb_url'   => $this->thumbUrl,
-            'footer'      => $this->footer,
+            'image_url' => $this->imageUrl,
+            'thumb_url' => $this->thumbUrl,
+            'footer' => $this->footer,
             'footer_icon' => $this->footerIcon,
-            'ts'          => $this->ts,
-            'fields'      => $this->getFields(),
-        ]);
+            'ts' => $this->ts,
+            'fields' => $this->getFields(),
+        ] + $this->custom);
     }
 
     /**
@@ -340,8 +362,8 @@ class Attachment implements Arrayable
         foreach ($attributes as $key => $value) {
             $key = str_replace(' ', '', ucwords(str_replace(['-', '_'], ' ', $key)));
 
-            if (method_exists($this, "set{$key}")) {
-                $this->{"set{$key}"}($value);
+            if (method_exists($this, $setter = "set{$key}")) {
+                $this->{$setter}($value);
             }
         }
     }
