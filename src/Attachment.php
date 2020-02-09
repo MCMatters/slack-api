@@ -6,6 +6,7 @@ namespace McMatters\SlackApi;
 
 use DateTime;
 use InvalidArgumentException;
+
 use function array_filter, method_exists, str_replace, ucwords;
 
 /**

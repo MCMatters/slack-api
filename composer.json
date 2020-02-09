@@ -8,8 +8,9 @@
         }
     ],
     "require": {
-        "php": ">=7.0",
-        "ext-curl": "*"
+        "php": ">=7.1",
+        "ext-curl": "*",
+        "mcmatters/ticl": "dev-master"
     },
     "autoload": {
         "psr-4": {
