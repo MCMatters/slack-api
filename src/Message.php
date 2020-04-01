@@ -181,20 +181,20 @@ class Message
     /**
      * @param array $headers
      *
-     * @return array
+     * @return string
      *
      * @throws \RuntimeException
      * @throws \McMatters\Ticl\Exceptions\RequestException
      * @throws \McMatters\Ticl\Exceptions\JsonDecodingException
      */
-    public function send(array $headers = []): array
+    public function send(array $headers = []): string
     {
         return (new Client())
-            ->get($this->webhookUrl, [
+            ->post($this->webhookUrl, [
                 'headers' => $headers,
                 'json' => $this->preparePayload(),
             ])
-            ->json();
+            ->getBody();
     }
 
     /**
