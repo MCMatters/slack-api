@@ -345,13 +345,13 @@ class Attachment implements Arrayable
     }
 
     /**
-     * @param array $data
+     * @param array $custom
      *
      * @return \McMatters\SlackApi\Message\Attachment
      */
-    public function setCustom(array $data): Attachment
+    public function setCustom(array $custom): Attachment
     {
-        $this->custom = $data;
+        $this->custom = $custom;
 
         return $this;
     }
@@ -362,20 +362,20 @@ class Attachment implements Arrayable
     public function toArray(): array
     {
         return array_filter([
-            'fallback' => $this->fallback,
-            'color' => $this->color,
-            'text' => $this->text,
-            'title' => $this->title,
-            'title_link' => $this->titleLink,
-            'pretext' => $this->pretext,
-            'author_name' => $this->authorName,
-            'author_link' => $this->authorLink,
-            'author_icon' => $this->authorIcon,
-            'image_url' => $this->imageUrl,
-            'thumb_url' => $this->thumbUrl,
-            'footer' => $this->footer,
-            'footer_icon' => $this->footerIcon,
-            'ts' => $this->ts,
+            'fallback' => $this->fallback ?? null,
+            'color' => $this->color ?? null,
+            'text' => $this->text ?? null,
+            'title' => $this->title ?? null,
+            'title_link' => $this->titleLink ?? null,
+            'pretext' => $this->pretext ?? null,
+            'author_name' => $this->authorName ?? null,
+            'author_link' => $this->authorLink ?? null,
+            'author_icon' => $this->authorIcon ?? null,
+            'image_url' => $this->imageUrl ?? null,
+            'thumb_url' => $this->thumbUrl ?? null,
+            'footer' => $this->footer ?? null,
+            'footer_icon' => $this->footerIcon ?? null,
+            'ts' => $this->ts ?? null,
             'fields' => array_map(
                 static fn (AttachmentField $field) => $field->toArray(),
                 $this->fields ?? [],

@@ -32,6 +32,17 @@ class Block implements Arrayable
     }
 
     /**
+     * @param string $type
+     * @param array $custom
+     *
+     * @return \McMatters\SlackApi\Message\Block
+     */
+    public static function make(string $type, array $custom = []): Block
+    {
+        return new static($type, $custom);
+    }
+
+    /**
      * @param array $custom
      *
      * @return \McMatters\SlackApi\Message\Block

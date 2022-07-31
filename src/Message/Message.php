@@ -178,13 +178,13 @@ class Message implements Arrayable
     }
 
     /**
-     * @param array $data
+     * @param array $custom
      *
      * @return \McMatters\SlackApi\Message\Message
      */
-    public function setCustom(array $data): Message
+    public function setCustom(array $custom): Message
     {
-        $this->custom = $data;
+        $this->custom = $custom;
 
         return $this;
     }
@@ -197,9 +197,9 @@ class Message implements Arrayable
     public function toArray(): array
     {
         return array_filter([
-            'text' => $this->text,
+            'text' => $this->text ?? null,
             'channel' => $this->to,
-            'username' => $this->from,
+            'username' => $this->from ?? null,
             $this->iconType => $this->icon,
             'attachments' => array_map(
                 static fn (Attachment $attachment) => $attachment->toArray(),
