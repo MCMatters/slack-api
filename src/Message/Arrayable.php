@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace McMatters\SlackApi;
+namespace McMatters\SlackApi\Message;
 
 /**
  * Interface Arrayable
  *
- * @package McMatters\SlackApi
+ * @package McMatters\SlackApi\Message
  */
 interface Arrayable
 {

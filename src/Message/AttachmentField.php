@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace McMatters\SlackApi;
+namespace McMatters\SlackApi\Message;
 
 use const false;
 
 /**
  * Class AttachmentField
  *
- * @package McMatters\SlackApi
+ * @package McMatters\SlackApi\Message
  */
 class AttachmentField implements Arrayable
 {
@@ -45,7 +45,7 @@ class AttachmentField implements Arrayable
      * @param string $value
      * @param bool $short
      *
-     * @return \McMatters\SlackApi\AttachmentField
+     * @return \McMatters\SlackApi\Message\AttachmentField
      */
     public static function make(
         string $title,

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace McMatters\SlackApi;
+namespace McMatters\SlackApi\Message;
 
 use DateTime;
-use InvalidArgumentException;
 
 use function array_filter;
+use function array_map;
 use function method_exists;
 use function str_replace;
 use function ucwords;
@@ -15,7 +15,7 @@ use function ucwords;
 /**
  * Class Attachment
  *
- * @package McMatters\SlackApi
+ * @package McMatters\SlackApi\Message
  */
 class Attachment implements Arrayable
 {
@@ -90,9 +90,14 @@ class Attachment implements Arrayable
     protected ?string $ts;
 
     /**
-     * @var \McMatters\SlackApi\AttachmentField[]
+     * @var \McMatters\SlackApi\Message\AttachmentField[]
      */
     protected array $fields = [];
+
+    /**
+     * @var \McMatters\SlackApi\Message\Block[]
+     */
+    protected array $blocks = [];
 
     /**
      * @var array
@@ -110,7 +115,7 @@ class Attachment implements Arrayable
     /**
      * @param array $attributes
      *
-     * @return \McMatters\SlackApi\Attachment
+     * @return \McMatters\SlackApi\Message\Attachment
      */
     public static function make(array $attributes = []): Attachment
     {
@@ -120,9 +125,9 @@ class Attachment implements Arrayable
     /**
      * @param string $fallback
      *
-     * @return \McMatters\SlackApi\Attachment
+     * @return \McMatters\SlackApi\Message\Attachment
      */
-    public function setFallback(string $fallback): self
+    public function setFallback(string $fallback): Attachment
     {
         $this->fallback = $fallback;
 
@@ -132,9 +137,9 @@ class Attachment implements Arrayable
     /**
      * @param string $color
      *
-     * @return \McMatters\SlackApi\Attachment
+     * @return \McMatters\SlackApi\Message\Attachment
      */
-    public function setColor(string $color): self
+    public function setColor(string $color): Attachment
     {
         $this->color = $color;
 
@@ -144,9 +149,9 @@ class Attachment implements Arrayable
     /**
      * @param string $text
      *
-     * @return \McMatters\SlackApi\Attachment
+     * @return \McMatters\SlackApi\Message\Attachment
      */
-    public function setText(string $text): self
+    public function setText(string $text): Attachment
     {
         $this->text = $text;
 
@@ -156,9 +161,9 @@ class Attachment implements Arrayable
     /**
      * @param string $title
      *
-     * @return \McMatters\SlackApi\Attachment
+     * @return \McMatters\SlackApi\Message\Attachment
      */
-    public function setTitle(string $title): self
+    public function setTitle(string $title): Attachment
     {
         $this->title = $title;
 
@@ -168,9 +173,9 @@ class Attachment implements Arrayable
     /**
      * @param string $titleLink
      *
-     * @return \McMatters\SlackApi\Attachment
+     * @return \McMatters\SlackApi\Message\Attachment
      */
-    public function setTitleLink(string $titleLink): self
+    public function setTitleLink(string $titleLink): Attachment
     {
         $this->titleLink = $titleLink;
 
@@ -180,9 +185,9 @@ class Attachment implements Arrayable
     /**
      * @param string $pretext
      *
-     * @return \McMatters\SlackApi\Attachment
+     * @return \McMatters\SlackApi\Message\Attachment
      */
-    public function setPretext(string $pretext): self
+    public function setPretext(string $pretext): Attachment
     {
         $this->pretext = $pretext;
 
@@ -192,9 +197,9 @@ class Attachment implements Arrayable
     /**
      * @param string $authorName
      *
-     * @return \McMatters\SlackApi\Attachment
+     * @return \McMatters\SlackApi\Message\Attachment
      */
-    public function setAuthorName(string $authorName): self
+    public function setAuthorName(string $authorName): Attachment
     {
         $this->authorName = $authorName;
 
@@ -204,9 +209,9 @@ class Attachment implements Arrayable
     /**
      * @param string $authorLink
      *
-     * @return \McMatters\SlackApi\Attachment
+     * @return \McMatters\SlackApi\Message\Attachment
      */
-    public function setAuthorLink(string $authorLink): self
+    public function setAuthorLink(string $authorLink): Attachment
     {
         $this->authorLink = $authorLink;
 
@@ -216,9 +221,9 @@ class Attachment implements Arrayable
     /**
      * @param string $authorIcon
      *
-     * @return \McMatters\SlackApi\Attachment
+     * @return \McMatters\SlackApi\Message\Attachment
      */
-    public function setAuthorIcon(string $authorIcon): self
+    public function setAuthorIcon(string $authorIcon): Attachment
     {
         $this->authorIcon = $authorIcon;
 
@@ -228,9 +233,9 @@ class Attachment implements Arrayable
     /**
      * @param string $imageUrl
      *
-     * @return \McMatters\SlackApi\Attachment
+     * @return \McMatters\SlackApi\Message\Attachment
      */
-    public function setImageUrl(string $imageUrl): self
+    public function setImageUrl(string $imageUrl): Attachment
     {
         $this->imageUrl = $imageUrl;
 
@@ -240,9 +245,9 @@ class Attachment implements Arrayable
     /**
      * @param string $thumbUrl
      *
-     * @return \McMatters\SlackApi\Attachment
+     * @return \McMatters\SlackApi\Message\Attachment
      */
-    public function setThumbUrl(string $thumbUrl): self
+    public function setThumbUrl(string $thumbUrl): Attachment
     {
         $this->thumbUrl = $thumbUrl;
 
@@ -252,9 +257,9 @@ class Attachment implements Arrayable
     /**
      * @param string $footer
      *
-     * @return \McMatters\SlackApi\Attachment
+     * @return \McMatters\SlackApi\Message\Attachment
      */
-    public function setFooter(string $footer): self
+    public function setFooter(string $footer): Attachment
     {
         $this->footer = $footer;
 
@@ -264,9 +269,9 @@ class Attachment implements Arrayable
     /**
      * @param string $footerIcon
      *
-     * @return \McMatters\SlackApi\Attachment
+     * @return \McMatters\SlackApi\Message\Attachment
      */
-    public function setFooterIcon(string $footerIcon): self
+    public function setFooterIcon(string $footerIcon): Attachment
     {
         $this->footerIcon = $footerIcon;
 
@@ -276,9 +281,9 @@ class Attachment implements Arrayable
     /**
      * @param string|int|DateTime $ts
      *
-     * @return \McMatters\SlackApi\Attachment
+     * @return \McMatters\SlackApi\Message\Attachment
      */
-    public function setTs($ts): self
+    public function setTs($ts): Attachment
     {
         $this->ts = $ts instanceof DateTime ? $ts->getTimestamp() : $ts;
 
@@ -286,19 +291,26 @@ class Attachment implements Arrayable
     }
 
     /**
-     * @param \McMatters\SlackApi\AttachmentField[] $fields
+     * @param \McMatters\SlackApi\Message\AttachmentField $field
      *
-     * @return \McMatters\SlackApi\Attachment
-     * @throws \InvalidArgumentException
+     * @return \McMatters\SlackApi\Message\Attachment
      */
-    public function setFields(array $fields): self
+    public function addField(AttachmentField $field): Attachment
+    {
+        $this->fields[] = $field;
+
+        return $this;
+    }
+
+    /**
+     * @param \McMatters\SlackApi\Message\AttachmentField[] $fields
+     *
+     * @return \McMatters\SlackApi\Message\Attachment
+     */
+    public function addFields(array $fields): Attachment
     {
         foreach ($fields as $field) {
-            if (!$field instanceof AttachmentField) {
-                throw new InvalidArgumentException(
-                    'Expected array of AttachmentField elements'
-                );
-            }
+            $this->addField($field);
         }
 
         $this->fields = $fields;
@@ -307,13 +319,27 @@ class Attachment implements Arrayable
     }
 
     /**
-     * @param \McMatters\SlackApi\AttachmentField $field
+     * @param \McMatters\SlackApi\Message\Block $block
      *
-     * @return \McMatters\SlackApi\Attachment
+     * @return \McMatters\SlackApi\Message\Attachment
      */
-    public function addField(AttachmentField $field): self
+    public function addBlock(Block $block): Attachment
     {
-        $this->fields[] = $field;
+        $this->blocks[] = $block;
+
+        return $this;
+    }
+
+    /**
+     * @param array $blocks
+     *
+     * @return \McMatters\SlackApi\Message\Attachment
+     */
+    public function addBlocks(array $blocks): Attachment
+    {
+        foreach ($blocks as $block) {
+            $this->addBlock($block);
+        }
 
         return $this;
     }
@@ -321,9 +347,9 @@ class Attachment implements Arrayable
     /**
      * @param array $data
      *
-     * @return \McMatters\SlackApi\Attachment
+     * @return \McMatters\SlackApi\Message\Attachment
      */
-    public function setCustom(array $data): self
+    public function setCustom(array $data): Attachment
     {
         $this->custom = $data;
 
@@ -350,8 +376,15 @@ class Attachment implements Arrayable
             'footer' => $this->footer,
             'footer_icon' => $this->footerIcon,
             'ts' => $this->ts,
-            'fields' => $this->getFields(),
-        ] + $this->custom);
+            'fields' => array_map(
+                static fn (AttachmentField $field) => $field->toArray(),
+                $this->fields ?? [],
+            ),
+            'blocks' => array_map(
+                static fn (Block $block) => $block->toArray(),
+                $this->blocks ?? [],
+            ),
+        ]) + $this->custom;
     }
 
     /**
@@ -364,23 +397,15 @@ class Attachment implements Arrayable
         foreach ($attributes as $key => $value) {
             $key = str_replace(' ', '', ucwords(str_replace(['-', '_'], ' ', $key)));
 
-            if (method_exists($this, $setter = "set{$key}")) {
+            if ($key === 'blocks' || $key === 'fields') {
+                $setter = "add{$key}";
+            } else {
+                $setter = "set{$key}";
+            }
+
+            if (method_exists($this, $setter)) {
                 $this->{$setter}($value);
             }
         }
-    }
-
-    /**
-     * @return array
-     */
-    protected function getFields(): array
-    {
-        $fields = [];
-
-        foreach ($this->fields as $field) {
-            $fields[] = $field->toArray();
-        }
-
-        return $fields;
     }
 }

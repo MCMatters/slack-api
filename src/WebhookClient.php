@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace McMatters\SlackApi;
 
+use McMatters\SlackApi\Message\Arrayable;
 use McMatters\Ticl\Client;
 
 /**
@@ -15,7 +16,7 @@ class WebhookClient
 {
     /**
      * @param string $webhookUrl
-     * @param array|\McMatters\SlackApi\Arrayable $data
+     * @param array|\McMatters\SlackApi\Message\Arrayable $data
      * @param array $headers
      *
      * @return string

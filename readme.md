@@ -11,7 +11,7 @@ composer require mcmatters/slack-api
 ```php
 <?php
 
-use McMatters\SlackApi\Message;
+use McMatters\SlackApi\Message\Message;
 use McMatters\SlackApi\SlackClient;
 use McMatters\SlackApi\WebhookClient;
 
@@ -19,10 +19,10 @@ require 'vendor/autoload.php';
 
 // Send message to webhook url.
 WebhookClient::send(
-    'YOUR_WEBHOOK_URL',
+    'https://hooks.slack.com/services/YOUR_WEBHOOK_URL',
     Message::make('Hello world')
-        ->from('Foo')
-        ->to('#bar')
+        ->from('HelloBot')
+        ->to('#general')
         ->icon(':rocket:')
 );
 
