@@ -30,6 +30,8 @@ class SlackClient
      */
     public function __construct(string $token)
     {
+        $this->token = $token;
+
         $this->httpClient = new Client([
             'base_uri' => 'https://slack.com/api',
             'headers' => [
