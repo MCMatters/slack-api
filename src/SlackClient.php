@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace McMatters\SlackApi;
 
@@ -18,16 +18,14 @@ class SlackClient
     /**
      * @var \McMatters\Ticl\Client
      */
-    protected $httpClient;
+    protected Client $httpClient;
 
     /**
      * @var string|null
      */
-    protected $token;
+    protected ?string $token;
 
     /**
-     * SlackClient constructor.
-     *
      * @param string $token
      */
     public function __construct(string $token)
@@ -42,24 +40,26 @@ class SlackClient
 
     /**
      * @param string $method
+     * @param array $query
      * @param array $options
      *
      * @return array
      */
-    public function get(string $method, array $options = []): array
+    public function get(string $method, array $query = [], array $options = []): array
     {
-        return $this->call('get', $method, $options);
+        return $this->call('get', $method, ['query' => $query] + $options);
     }
 
     /**
      * @param string $method
+     * @param array $data
      * @param array $options
      *
      * @return array
      */
-    public function post(string $method, array $options = []): array
+    public function post(string $method, array $data, array $options = []): array
     {
-        return $this->call('post', $method, $options);
+        return $this->call('post', $method, ['json' => $data] + $options);
     }
 
     /**

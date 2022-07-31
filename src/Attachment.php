@@ -1,13 +1,16 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace McMatters\SlackApi;
 
 use DateTime;
 use InvalidArgumentException;
 
-use function array_filter, method_exists, str_replace, ucwords;
+use function array_filter;
+use function method_exists;
+use function str_replace;
+use function ucwords;
 
 /**
  * Class Attachment
@@ -17,88 +20,86 @@ use function array_filter, method_exists, str_replace, ucwords;
 class Attachment implements Arrayable
 {
     /**
-     * @var string
+     * @var string|null
      */
-    protected $fallback;
+    protected ?string $fallback;
 
     /**
-     * @var string
+     * @var string|null
      */
-    protected $color;
+    protected ?string $color;
 
     /**
-     * @var string
+     * @var string|null
      */
-    protected $text;
+    protected ?string $text;
 
     /**
-     * @var string
+     * @var string|null
      */
-    protected $title;
+    protected ?string $title;
 
     /**
-     * @var string
+     * @var string|null
      */
-    protected $titleLink;
+    protected ?string $titleLink;
 
     /**
-     * @var string
+     * @var string|null
      */
-    protected $pretext;
+    protected ?string $pretext;
 
     /**
-     * @var string
+     * @var string|null
      */
-    protected $authorName;
+    protected ?string $authorName;
 
     /**
-     * @var string
+     * @var string|null
      */
-    protected $authorLink;
+    protected ?string $authorLink;
 
     /**
-     * @var string
+     * @var string|null
      */
-    protected $authorIcon;
+    protected ?string $authorIcon;
 
     /**
-     * @var string
+     * @var string|null
      */
-    protected $imageUrl;
+    protected ?string $imageUrl;
 
     /**
-     * @var string
+     * @var string|null
      */
-    protected $thumbUrl;
+    protected ?string $thumbUrl;
 
     /**
-     * @var string
+     * @var string|null
      */
-    protected $footer;
+    protected ?string $footer;
 
     /**
-     * @var string
+     * @var string|null
      */
-    protected $footerIcon;
+    protected ?string $footerIcon;
 
     /**
-     * @var string
+     * @var string|null
      */
-    protected $ts;
+    protected ?string $ts;
 
     /**
      * @var \McMatters\SlackApi\AttachmentField[]
      */
-    protected $fields = [];
+    protected array $fields = [];
 
     /**
      * @var array
      */
-    protected $custom = [];
+    protected array $custom = [];
 
     /**
-     * Attachment constructor.
-     *
      * @param array $attributes
      */
     public function __construct(array $attributes = [])
@@ -358,7 +359,7 @@ class Attachment implements Arrayable
      *
      * @return void
      */
-    protected function setAttributes(array $attributes = [])
+    protected function setAttributes(array $attributes = []): void
     {
         foreach ($attributes as $key => $value) {
             $key = str_replace(' ', '', ucwords(str_replace(['-', '_'], ' ', $key)));

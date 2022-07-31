@@ -1,88 +1,74 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace McMatters\SlackApi;
 
-use InvalidArgumentException;
-use McMatters\Ticl\Client;
-use RuntimeException;
+use function array_filter;
 
-use const null, true;
-
-use function array_filter, implode, in_array;
+use const null;
 
 /**
  * Class Message
  *
  * @package McMatters\SlackApi
  */
-class Message
+class Message implements Arrayable
 {
     public const ICON_TYPE_EMOJI = 'icon_emoji';
     public const ICON_TYPE_URL = 'icon_url';
 
     /**
-     * @var string
+     * @var string|null
      */
-    protected $webhookUrl;
+    protected ?string $text;
+
+    /**
+     * @var string|null
+     */
+    protected ?string $to;
+
+    /**
+     * @var string|null
+     */
+    protected ?string $from;
 
     /**
      * @var string
      */
-    protected $text;
+    protected string $icon = ':robot_face:';
 
     /**
      * @var string
      */
-    protected $to;
-
-    /**
-     * @var string
-     */
-    protected $from;
-
-    /**
-     * @var string
-     */
-    protected $icon = ':robot_face:';
-
-    /**
-     * @var string
-     */
-    protected $iconType = self::ICON_TYPE_EMOJI;
+    protected string $iconType = self::ICON_TYPE_EMOJI;
 
     /**
      * @var \McMatters\SlackApi\Attachment[]
      */
-    protected $attachments = [];
+    protected array $attachments = [];
 
     /**
      * @var array
      */
-    protected $custom = [];
+    protected array $custom = [];
 
     /**
-     * Message constructor.
-     *
-     * @param string $webhookUrl
      * @param string|null $text
      */
-    public function __construct(string $webhookUrl, string $text = null)
+    public function __construct(string $text = null)
     {
-        $this->webhookUrl = $webhookUrl;
         $this->text = $text;
     }
 
     /**
-     * @param string $webhookUrl
      * @param string|null $text
      *
      * @return \McMatters\SlackApi\Message
      */
-    public static function make(string $webhookUrl, string $text = null): Message
+    public static function make(string $text = null): Message
     {
-        return new static($webhookUrl, $text);
+        return new static($text);
     }
 
     /**
@@ -131,8 +117,6 @@ class Message
      */
     public function icon(string $icon, string $type = self::ICON_TYPE_EMOJI): self
     {
-        $this->checkIconType($type);
-
         $this->icon = $icon;
         $this->iconType = $type;
 
@@ -179,33 +163,12 @@ class Message
     }
 
     /**
-     * @param array $headers
-     *
-     * @return string
-     *
-     * @throws \RuntimeException
-     * @throws \McMatters\Ticl\Exceptions\RequestException
-     * @throws \McMatters\Ticl\Exceptions\JsonDecodingException
-     */
-    public function send(array $headers = []): string
-    {
-        return (new Client())
-            ->post($this->webhookUrl, [
-                'headers' => $headers,
-                'json' => $this->preparePayload(),
-            ])
-            ->getBody();
-    }
-
-    /**
      * @return array
      *
      * @throws \RuntimeException
      */
-    protected function preparePayload(): array
+    public function toArray(): array
     {
-        $this->checkRequiredVariables();
-
         return array_filter([
             'text' => $this->text,
             'channel' => $this->to,
@@ -227,35 +190,5 @@ class Message
         }
 
         return $attachments;
-    }
-
-    /**
-     * @param string $type
-     *
-     * @return void
-     *
-     * @throws \InvalidArgumentException
-     */
-    protected function checkIconType(string $type = self::ICON_TYPE_EMOJI): void
-    {
-        $types = [self::ICON_TYPE_EMOJI, self::ICON_TYPE_URL];
-
-        if (!in_array($type, $types, true)) {
-            throw new InvalidArgumentException(
-                'Icon type must be '.implode(' or ', $types)
-            );
-        }
-    }
-
-    /**
-     * @return void
-     *
-     * @throws \RuntimeException
-     */
-    protected function checkRequiredVariables(): void
-    {
-        if (null === $this->text && empty($this->attachments)) {
-            throw new RuntimeException('Missing text message or attachments');
-        }
     }
 }

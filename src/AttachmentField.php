@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace McMatters\SlackApi;
 
@@ -16,21 +16,19 @@ class AttachmentField implements Arrayable
     /**
      * @var string
      */
-    protected $title;
+    protected string $title;
 
     /**
      * @var string
      */
-    protected $value;
+    protected string $value;
 
     /**
      * @var bool
      */
-    protected $short;
+    protected bool $short;
 
     /**
-     * AttachmentField constructor.
-     *
      * @param string $title
      * @param string $value
      * @param bool $short

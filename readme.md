@@ -13,18 +13,20 @@ composer require mcmatters/slack-api
 
 use McMatters\SlackApi\Message;
 use McMatters\SlackApi\SlackClient;
+use McMatters\SlackApi\WebhookClient;
 
 require 'vendor/autoload.php';
 
 // Send message to webhook url.
-Message::make('WEBHOOK_URL')
-    ->from('Foo')
-    ->to('#bar')
-    ->icon(':robot_face:')
-    ->text('Hello world')
-    ->send();
+WebhookClient::send(
+    'YOUR_WEBHOOK_URL',
+    Message::make('Hello world')
+        ->from('Foo')
+        ->to('#bar')
+        ->icon(':rocket:')
+);
 
-// Use slack client wrapper
+// Use Slack client wrapper.
 $client = new SlackClient('TOKEN');
-$client->get('users.info', ['query' => ['user' => 'W1234567890']]);
+$client->get('users.info', ['user' => 'W1234567890']);
 ```
